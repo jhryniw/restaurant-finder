@@ -30,6 +30,11 @@
  int yegX, yegY;
  int cursorX, cursorY;
 
+void drawCursor() {
+  tft.fillRect(cursorX, cursorY,
+               CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
+}
+
  /* Redraw the cursor if it has moved */
  void redrawCursor(joy_state_t joy_state) {
 
@@ -52,8 +57,7 @@
          cursorY = constrain(cursorY, 0, MAP_HEIGHT-CURSOR_SIZE);
 
          // Draw the cursor at the new position
-         tft.fillRect(cursorX, cursorY,
-                      CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
+         drawCursor();
      }
  }
 
@@ -88,11 +92,10 @@
      cursorX = DISPLAY_WIDTH / 2;
      cursorY = (MAP_WIDTH) / 2;
 
-     tft.fillRect(cursorX, cursorY,
-                  CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
-
+     drawCursor();
      initJoy();
  }
+
 
  // If cursor is moved to edge of screen, moves map in that direction
  // and relocates cursorX or cursorY to a suitable location on screen
@@ -144,6 +147,7 @@
         yegX, yegY,
         0, 0,
         MAP_WIDTH, MAP_HEIGHT);
+    drawCursor();
    }
  }
 
