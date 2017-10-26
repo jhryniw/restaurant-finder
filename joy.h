@@ -10,8 +10,8 @@
 #define JOY_HORIZ A0
 #define JOY_VERT  A1
 #define JOY_SEL   2
-#define JOY_DEADZONE  5
-#define JOY_CENTER 524
+#define JOY_DEADZONE  24
+#define JOY_CENTER 512
 #define MAX_CURSOR_SPEED 10
 
 // The joystick direction bitmask
