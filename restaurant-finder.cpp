@@ -1,9 +1,9 @@
 /**
- * @file restaurant-finder.cpp
- *
- * @author James Hryniw 1431912
- * @author Songhui Zhang 1499982
- */
+* @file restaurant-finder.cpp
+*
+* @author James Hryniw 1431912
+* @author Songhui Zhang 1499982
+*/
 
 #include <Arduino.h>
 #include "Adafruit_ILI9341.h" // Hardware-specific library
@@ -30,8 +30,8 @@ bool mapState;
 int selection = 0;
 
 void drawCursor() {
-  tft.fillRect(cursorX, cursorY,
-               CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
+tft.fillRect(cursorX, cursorY,
+             CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
 }
 
 /* Redraw the cursor if it has moved */
@@ -67,128 +67,130 @@ void changeState() {
     Serial.println("Changing state");
 }
 
- void setup() {
-     init();
+void setup() {
+   init();
 
-     Serial.begin(9600);
-     tft.begin();
+   Serial.begin(9600);
 
-     Serial.print("Initializing SD card...");
-     if (!SD.begin(SD_CS)) {
-         Serial.print("failed! Is it inserted properly?");
-         while(true) {}
-     }
+   tft.begin();
+   tft.setRotation(3);
+   tft.fillScreen(0);
 
-     tft.setRotation(3);
+   initSD();
 
-     tft.fillScreen(0);
+   yegX = YEG_SIZE/2 - (MAP_WIDTH)/2;
+   yegY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
 
-     yegX = YEG_SIZE/2 - (MAP_WIDTH)/2;
-     yegY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
+   lcd_image_draw(&yegImage, &tft,
+                  // coordinates in top left
+                  yegX, yegY,
+                  // start coordinates on display
+                  0, 0,
+                  // Display width and height
+                  MAP_WIDTH, DISPLAY_WIDTH);
 
-     mapState = true;
+   // Cursor starts in the center of the screen
+   cursorX = DISPLAY_WIDTH / 2;
+   cursorY = (MAP_WIDTH) / 2;
 
-     lcd_image_draw(&yegImage, &tft,
-                    // coordinates in top left
-                    yegX, yegY,
-                    // start coordinates on display
-                    0, 0,
-                    // Display width and height
-                    MAP_WIDTH, DISPLAY_WIDTH);
+   mapState = true;
 
-     // Cursor starts in the center of the screen
-     cursorX = DISPLAY_WIDTH / 2;
-     cursorY = (MAP_WIDTH) / 2;
+   drawCursor();
+   initJoy();
+}
 
-     drawCursor();
-     initJoy();
+// If cursor is moved to edge of screen, moves map in that direction
+// and relocates cursorX or cursorY to a suitable location on screen
+void moveMap() {
+ bool moved = true;
+
+ // If cursor is on left
+ if  (yegX > 0 && cursorX == 0) {
+   yegX -= MAP_WIDTH;
+   cursorX = MAP_WIDTH-CURSOR_SIZE*2;
+ }
+ // Cursor on right
+ else if (yegX < YEG_SIZE-MAP_WIDTH && cursorX == MAP_WIDTH-CURSOR_SIZE) {
+     yegX += MAP_WIDTH;
+     cursorX = CURSOR_SIZE;
+ }
+ // Cursor on top
+ else if (yegY > 0 && cursorY == 0) {
+   yegY -= MAP_HEIGHT;
+   cursorY = MAP_HEIGHT-CURSOR_SIZE*2;
+ }
+ // Cursor on bottom
+ else if (yegY < YEG_SIZE-MAP_HEIGHT && cursorY == MAP_HEIGHT-CURSOR_SIZE) {
+     yegY += MAP_HEIGHT;
+     cursorY = CURSOR_SIZE;
+ }
+ else {
+   moved = false;
  }
 
-
- // If cursor is moved to edge of screen, moves map in that direction
- // and relocates cursorX or cursorY to a suitable location on screen
- void moveMap() {
-   bool moved = true;
-
-   // If cursor is on left
-   if  (yegX > 0 && cursorX == 0) {
-     yegX -= MAP_WIDTH;
-     cursorX = MAP_WIDTH-CURSOR_SIZE*2;
-   }
-   // Cursor on right
-   else if (yegX < YEG_SIZE-MAP_WIDTH && cursorX == MAP_WIDTH-CURSOR_SIZE) {
-       yegX += MAP_WIDTH;
-       cursorX = CURSOR_SIZE;
-   }
-   // Cursor on top
-   else if (yegY > 0 && cursorY == 0) {
-     yegY -= MAP_HEIGHT;
-     cursorY = MAP_HEIGHT-CURSOR_SIZE*2;
-   }
-   // Cursor on bottom
-   else if (yegY < YEG_SIZE-MAP_HEIGHT && cursorY == MAP_HEIGHT-CURSOR_SIZE) {
-       yegY += MAP_HEIGHT;
-       cursorY = CURSOR_SIZE;
-   }
-   else {
-     moved = false;
-   }
-
-   // If the edges of overall map is reached,
-   // map is redrawn only until the edge
-   if (yegX < 0) {
-     yegX = 0;
-   }
-   else if (yegX > YEG_SIZE-MAP_WIDTH) {
-     yegX = YEG_SIZE-MAP_WIDTH;
-   }
-   else if (yegY < 0) {
-     yegY = 0;
-   }
-   else if (yegY > YEG_SIZE-MAP_HEIGHT) {
-     yegY = YEG_SIZE-MAP_HEIGHT;
-   }
-
-   // Redraws map and updates cursor
-   if (moved) {
-     lcd_image_draw(&yegImage, &tft,
-        yegX, yegY,
-        0, 0,
-        MAP_WIDTH, MAP_HEIGHT);
-    drawCursor();
-   }
+ // If the edges of overall map is reached,
+ // map is redrawn only until the edge
+ if (yegX < 0) {
+   yegX = 0;
+ }
+ else if (yegX > YEG_SIZE-MAP_WIDTH) {
+   yegX = YEG_SIZE-MAP_WIDTH;
+ }
+ else if (yegY < 0) {
+   yegY = 0;
+ }
+ else if (yegY > YEG_SIZE-MAP_HEIGHT) {
+   yegY = YEG_SIZE-MAP_HEIGHT;
  }
 
- int main() {
-     setup();
-
-     while(true) {
-         // Read the joystick state
-         joy_state_t joy_state = readJoy();
-
-         if (joy_state.button_pressed) {
-             changeState();
-             delay(100);
-         }
-
-         if (mapState) {
-             // Redraw the cursor
-             redrawCursor(joy_state);
-
-             moveMap();
-
-             delay(5);
-         }
-         else {
-             if (joy_state.direction & UP_MASK) {
-                 changeSelection(selection, selection - 1);
-             }
-             else if (joy_state.direction & DOWN_MASK) {
-                 changeSelection(selection, selection + 1);
-             }
-         }
-     }
-
-     Serial.end();
-     return 0;
+ // Redraws map and updates cursor
+ if (moved) {
+   lcd_image_draw(&yegImage, &tft,
+      yegX, yegY,
+      0, 0,
+      MAP_WIDTH, MAP_HEIGHT);
+  drawCursor();
  }
+}
+
+int main() {
+    setup();
+
+    Restaurant closest20[20];
+
+    get20Restaurants(1000, 1000, closest20);
+
+    for (int i = 0; i < 20; i++) {
+    	Serial.println(closest20[i].name);
+    }
+
+    while(true) {
+       // Read the joystick state
+       joy_state_t joy_state = readJoy();
+
+        if (joy_state.button_pressed) {
+            changeState();
+            delay(100);
+        }
+
+        if (mapState) {
+            // Redraw the cursor
+            redrawCursor(joy_state);
+
+            moveMap();
+
+            delay(5);
+        }
+        else {
+            if (joy_state.direction & UP_MASK) {
+                changeSelection(selection, selection - 1);
+            }
+            else if (joy_state.direction & DOWN_MASK) {
+                changeSelection(selection, selection + 1);
+            }
+        }
+    }
+
+   Serial.end();
+   return 0;
+}
