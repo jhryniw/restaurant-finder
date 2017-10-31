@@ -6,7 +6,8 @@
 #include "rest_sd.h"
 
 Sd2Card card;
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+Restaurant closest20[20];
+extern
 
 /** Initializes the SD card */
 void initSD() {
@@ -70,7 +71,7 @@ void getRestaurant(int restIndex, Restaurant* rest) {
     *rest = restCache[restIndex % 8];
 }
 
-void writeName(const char* name, int index, bool selection) {
+void writeName(const char* name, int index) {
     tft.setCursor(0, ((TEXT_SIZE * 7) + 1) * index);
 
     if (index == selection) {
@@ -114,23 +115,25 @@ void get20Restaurants(int x, int y, Restaurant* restArr) {
 
 }
 
-void changeSelection(int& selection, int new_selection) {
+void changeSelection(int new_selection) {
 
-    if (new_selection < 0 || new_selection >= 20) return;
+    if (new_selection >= 20) {
+        new_selection = new_selection % 20;
+    }
+    else if (new_selection < 0) {
+        new_selection += 20;
+    }
 
     int temp = selection;
     selection = new_selection;
 
-    //writeName(rests[temp].name, temp, true);
-    //writeName(rests[selection].name, selection);
+    writeName(closest20[temp].name, temp);
+    writeName(closest20[selection].name, selection);
 }
 
 void goToListMode() {
-    /*tft.fillScreen(ILI9341_BLACK);
+    tft.fillScreen(ILI9341_BLACK);
 
-    for (int i = 0; i < 20; i++) {
-        getRestaurant(i, rests + i);
-    }
-
-    displayAllRestaurants(rests, 20);*/
+    get20Restaurants(1000, 1000, closest20);
+    displayAllRestaurants(closest20, 20);
 }

@@ -24,10 +24,13 @@ bool mapState;
 int selection = 0;
 
 void changeState() {
-    mapState = !mapState;
-    selection = 0;
-    goToListMode();
     Serial.println("Changing state");
+    mapState = !mapState;
+
+    if (!mapState) {
+        selection = 0;
+        goToListMode();
+    }
 }
 
 void setup() {
@@ -37,7 +40,7 @@ void setup() {
 
    tft.begin();
    tft.setRotation(3);
-   tft.fillScreen(0);
+   //tft.fillScreen(0);
 
    initSD();
 
@@ -52,14 +55,6 @@ void setup() {
 
 int main() {
     setup();
-
-    Restaurant closest20[20];
-
-    get20Restaurants(1000, 1000, closest20);
-
-    for (int i = 0; i < 20; i++) {
-    	Serial.println(closest20[i].name);
-    }
 
     while(true) {
         // Read the joystick state
@@ -80,10 +75,10 @@ int main() {
         }
         else {
             if (joy_state.direction & UP_MASK) {
-                changeSelection(selection, selection - 1);
+                changeSelection(selection - 1);
             }
             else if (joy_state.direction & DOWN_MASK) {
-                changeSelection(selection, selection + 1);
+                changeSelection(selection + 1);
             }
         }
     }

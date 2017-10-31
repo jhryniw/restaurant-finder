@@ -34,6 +34,7 @@ struct RestDist {
 
 extern Sd2Card card;
 extern Adafruit_ILI9341 tft;
+extern int selection;
 
 const int TEXT_SIZE = 1;
 
@@ -46,8 +47,8 @@ void initSD();
  */
 void getRestaurant(int restIndex, Restaurant* rest);
 
-void writeName(const char* name, int index, bool selection = false);
-void changeSelection(int& selection, int new_selection);
+void writeName(const char* name, int index);
+void changeSelection(int new_selection);
 void goToListMode();
 void get20Restaurants(int x, int y, Restaurant* restArr);
 
