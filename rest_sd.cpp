@@ -1,5 +1,9 @@
 #include "rest_sd.h"
 
+Sd2Card card2;
+Restaurant restBlock[8];
+uint32_t lastBlock = -1;
+
 void initSD() {
 	Serial.print("Initializing SD card...");
 	if (!SD.begin(SD_CS)) {
@@ -7,7 +11,7 @@ void initSD() {
 			while(true) {}
 	}
 	Serial.print("Initializing SPI communication for raw reads...");
-  if (!card.init(SPI_HALF_SPEED, SD_CS)) {
+  if (!card2.init(SPI_HALF_SPEED, SD_CS)) {
     Serial.println("failed! Is the card inserted properly?");
     while (true) {}
   }
@@ -39,38 +43,40 @@ void ssort(RestDist *rest_dist, int len) {
 }
 
 void getRestaurant(int restIndex, Restaurant* restPtr) {
-  // calculate the block containing this restaurant
-  uint32_t blockNum = REST_START_BLOCK + restIndex/8;
-  Restaurant restBlock[8];
+  // Calculates block index
+	uint32_t blockNum = REST_START_BLOCK + restIndex/8;
 
-  // Serial.println(blockNum);
+  // Reads a new block if the current block is
+  // not the same as the last block read
+	if (blockNum != lastBlock) {
+		while (!card2.readBlock(blockNum, (uint8_t*) restBlock)) {
+	    Serial.println("Read block failed, trying again.");
+	  }
+    // Updates block index
+		lastBlock = blockNum;
+	}
 
-  while (!card.readBlock(blockNum, (uint8_t*) restBlock)) {
-    Serial.println("Read block failed, trying again.");
-  }
-  // Serial.print("Loaded: ");
-  // Serial.println(restBlock[0].name);
+  // Changes restaurant val at pointer
+	*restPtr = restBlock[restIndex % 8];
 
-  *restPtr = restBlock[restIndex % 8];
 }
 
-void get20Restaurants(int x, int y, Restaurant* restPtr) {
-
-	RestDist rest_dist[NUM_RESTAURANTS];
+void get20Restaurants(int x, int y, Restaurant* restArr) {
+	RestDist distances[NUM_RESTAURANTS];
 
 	for (int i = 0; i < NUM_RESTAURANTS; i++) {
 		Restaurant tempRest;
 		getRestaurant(i, &tempRest);
 
-		rest_dist[i].index = i;
-		rest_dist[i].dist = abs(x-tempRest.lon) + abs(y-tempRest.lat);
+		distances[i].index = i;
+		distances[i].dist = abs(x-tempRest.lon) + abs(y-tempRest.lat);
 	}
 
-	ssort(rest_dist, NUM_RESTAURANTS);
+	ssort(distances, NUM_RESTAURANTS);
 
 	for (int i = 0; i < 20; i++) {
-		uint16_t index = rest_dist[i].index;
-		getRestaurant(index, restPtr);
+		uint16_t index = distances[i].index;
+		getRestaurant(index, &restArr[i]);
 	}
 
 }

@@ -11,7 +11,7 @@
 #include <SD.h>
 #include "lcd_image.h"
 #include "joy.h"
-//#include "rest_sd.h"
+#include "rest_sd.h"
 
 #define TFT_DC 9
 #define TFT_CS 10
@@ -150,22 +150,14 @@ void moveMap() {
 int main() {
    setup();
 
-   Restaurant closest20Rests[20];
+   Restaurant closest20[20];
 
+   get20Restaurants(1000, 1000, closest20);
 
-  get20Restaurants(1000, 1000, closest20Rests, 20);
+ 	for (int i = 0; i < 20; i++) {
+ 		Serial.println(closest20[i].name);
+ 	}
 
-  displayAllRests(closest20Rests, 20);
-
-  for (int i = 0; i < 20; i ++) {
-    Serial.print(closest20Rests[i].name);
-    Serial.print("; lat: ");
-    Serial.print(closest20Rests[i].lat);
-    Serial.print("; lon: ");
-    Serial.println(closest20Rests[i].lon);
-  }
-
-  while (true) {};
 
    while(true) {
        // Read the joystick state
