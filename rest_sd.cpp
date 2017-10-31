@@ -14,12 +14,6 @@ void initSD() {
     // We assume this has been called
     // tft.begin();
 
-    Serial.print("Initializing SD card...");
-    if (!SD.begin(SD_CS)) {
-        Serial.print("failed! Is it inserted properly?");
-        while(true) {}
-    }
-    
     Serial.print("Initializing SPI communication for raw reads...");
     if (!card.init(SPI_HALF_SPEED, SD_CS)) {
         Serial.println("failed! Is the card inserted properly?");
@@ -60,7 +54,7 @@ void ssort(RestDist *rest_dist, int len) {
 void getRestaurant(int restIndex, Restaurant* rest) {
     // store cache as local static variables
     static Restaurant restCache[8];
-    static uint32_t lastBlock = -1;
+    static uint32_t lastBlock = REST_START_BLOCK - 1;
 
     uint32_t blockNum = REST_START_BLOCK + restIndex / 8;
 
