@@ -26,7 +26,7 @@ lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };
 
 int yegX, yegY;
 int cursorX, cursorY;
-bool mapState;
+bool mapState = true;
 int selection = 0;
 
 void drawCursor() {
@@ -63,7 +63,6 @@ void redrawCursor(joy_state_t joy_state) {
 void changeState() {
     mapState = !mapState;
     selection = 0;
-    goToListMode();
     Serial.println("Changing state");
 }
 
@@ -87,13 +86,11 @@ void setup() {
                   // start coordinates on display
                   0, 0,
                   // Display width and height
-                  MAP_WIDTH, DISPLAY_WIDTH);
+                  MAP_WIDTH, MAP_WIDTH);
 
    // Cursor starts in the center of the screen
-   cursorX = DISPLAY_WIDTH / 2;
-   cursorY = (MAP_WIDTH) / 2;
-
-   mapState = true;
+   cursorX = MAP_WIDTH / 2;
+   cursorY = MAP_WIDTH / 2;
 
    drawCursor();
    initJoy();
@@ -156,20 +153,32 @@ void moveMap() {
 int main() {
     setup();
 
-    Restaurant closest20[20];
-
-    get20Restaurants(1000, 1000, closest20);
-
-    for (int i = 0; i < 20; i++) {
-    	Serial.println(closest20[i].name);
-    }
-
     while(true) {
        // Read the joystick state
        joy_state_t joy_state = readJoy();
 
         if (joy_state.button_pressed) {
             changeState();
+
+            if (mapState){
+                tft.fillScreen(ILI9341_BLACK);
+                lcd_image_draw(&yegImage, &tft,
+                               // coordinates in top left
+                               yegX, yegY,
+                               // start coordinates on display
+                               0, 0,
+                               // Display width and height
+                               MAP_WIDTH, MAP_WIDTH);
+
+                // Cursor starts in the center of the screen
+                cursorX = MAP_WIDTH / 2;
+                cursorY = MAP_WIDTH / 2;
+
+            }
+            else {
+                goToListMode();
+            }
+
             delay(100);
         }
 

@@ -11,7 +11,6 @@ void initJoy() {
 
 /** Read the state of the joystick */
 joy_state_t readJoy() {
-
     int xVal = analogRead(JOY_HORIZ);
     int yVal = analogRead(JOY_VERT);
     int buttonVal = digitalRead(JOY_SEL);

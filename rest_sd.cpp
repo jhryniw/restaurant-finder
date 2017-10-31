@@ -126,11 +126,14 @@ void changeSelection(int& selection, int new_selection) {
 }
 
 void goToListMode() {
-    /*tft.fillScreen(ILI9341_BLACK);
+    tft.fillScreen(ILI9341_BLACK);
+
+    Restaurant closest20[20];
+    get20Restaurants(1000, 1000, closest20);
 
     for (int i = 0; i < 20; i++) {
-        getRestaurant(i, rests + i);
+        getRestaurant(i, &closest20[i]);
     }
 
-    displayAllRestaurants(rests, 20);*/
+    displayAllRestaurants(closest20, 20);
 }
