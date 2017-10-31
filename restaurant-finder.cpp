@@ -5,61 +5,67 @@
  * @author Songhui Zhang 1499982
  */
 
- #include <Arduino.h>
- #include "Adafruit_ILI9341.h" // Hardware-specific library
- #include <SPI.h>
- #include <SD.h>
- #include "lcd_image.h"
- #include "joy.h"
+#include <Arduino.h>
+#include "Adafruit_ILI9341.h" // Hardware-specific library
+#include <SPI.h>
+#include <SD.h>
+#include "lcd_image.h"
+#include "joy.h"
+#include "rest_sd.h";
 
- #define TFT_DC 9
- #define TFT_CS 10
- #define SD_CS  6
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
- Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+#define DISPLAY_WIDTH      320
+#define DISPLAY_HEIGHT     240
+#define MAP_WIDTH          DISPLAY_WIDTH-48
+#define MAP_HEIGHT         DISPLAY_HEIGHT
+#define YEG_SIZE           2048
+#define CURSOR_SIZE        10
 
- #define DISPLAY_WIDTH      320
- #define DISPLAY_HEIGHT     240
- #define MAP_WIDTH DISPLAY_WIDTH-48
- #define MAP_HEIGHT DISPLAY_HEIGHT
- #define YEG_SIZE          2048
- #define CURSOR_SIZE         10
+lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };
 
- lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };
-
- int yegX, yegY;
- int cursorX, cursorY;
+int yegX, yegY;
+int cursorX, cursorY;
+bool mapState;
+int selection = 0;
 
 void drawCursor() {
   tft.fillRect(cursorX, cursorY,
                CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
 }
 
- /* Redraw the cursor if it has moved */
- void redrawCursor(joy_state_t joy_state) {
+/* Redraw the cursor if it has moved */
+void redrawCursor(joy_state_t joy_state) {
 
-     // i.e the joystick is not in the center (will move)
-     if (joy_state.direction) {
+    // i.e the joystick is not in the center (will move)
+    if (joy_state.direction) {
 
-         // Draw over the old cursor postition with the map
-         lcd_image_draw(&yegImage, &tft,
+        // Draw over the old cursor postition with the map
+        lcd_image_draw(&yegImage, &tft,
                         // coordinates in top left
                         yegX + cursorX, yegY + cursorY,
                         // start coordinates on display
                         cursorX, cursorY,
                         CURSOR_SIZE, CURSOR_SIZE);
 
-         // Move the cursor, note that cursorX and cursorY are mutated by this function
-         moveCursor(cursorX, cursorY, joy_state);
+        // Move the cursor, note that cursorX and cursorY are mutated by this function
+        moveCursor(cursorX, cursorY, joy_state);
 
-         // Constrain the cursor position to the screen
-         cursorX = constrain(cursorX, 0, MAP_WIDTH-CURSOR_SIZE);
-         cursorY = constrain(cursorY, 0, MAP_HEIGHT-CURSOR_SIZE);
+        // Constrain the cursor position to the screen
+        cursorX = constrain(cursorX, 0, MAP_WIDTH-CURSOR_SIZE);
+        cursorY = constrain(cursorY, 0, MAP_HEIGHT-CURSOR_SIZE);
 
-         // Draw the cursor at the new position
-         drawCursor();
-     }
- }
+        // Draw the cursor at the new position
+        drawCursor();
+    }
+}
+
+void changeState() {
+    mapState = !mapState;
+    selection = 0;
+    goToListMode();
+    Serial.println("Changing state");
+}
 
  void setup() {
      init();
@@ -79,6 +85,8 @@ void drawCursor() {
 
      yegX = YEG_SIZE/2 - (MAP_WIDTH)/2;
      yegY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
+
+     mapState = true;
 
      lcd_image_draw(&yegImage, &tft,
                     // coordinates in top left
@@ -158,12 +166,27 @@ void drawCursor() {
          // Read the joystick state
          joy_state_t joy_state = readJoy();
 
-         // Redraw the cursor
-         redrawCursor(joy_state);
+         if (joy_state.button_pressed) {
+             changeState();
+             delay(100);
+         }
 
-         moveMap();
+         if (mapState) {
+             // Redraw the cursor
+             redrawCursor(joy_state);
 
-         delay(5);
+             moveMap();
+
+             delay(5);
+         }
+         else {
+             if (joy_state.direction & UP_MASK) {
+                 changeSelection(selection, selection - 1);
+             }
+             else if (joy_state.direction & DOWN_MASK) {
+                 changeSelection(selection, selection + 1);
+             }
+         }
      }
 
      Serial.end();
