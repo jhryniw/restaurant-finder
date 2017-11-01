@@ -78,6 +78,7 @@ int main() {
             else if (joy_state.direction & DOWN_MASK) {
                 changeSelection(selection + 1);
             }
+            delay(100);
         }
     }
 
