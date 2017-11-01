@@ -1,7 +1,7 @@
 #include "restaurant_map.h"
 
 RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
-    tft_(tft)
+    tft_(tft), mapX(0), mapY(0), cursorX(0), cursorY(0)
 {
     Serial.print("Initializing SD card...");
     if (!SD.begin(SD_CS)) {
@@ -16,11 +16,16 @@ void RestaurantMap::init() {
     mapY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
 
     // Cursor starts in the center of the screen
-    cursorX = DISPLAY_WIDTH / 2;
-    cursorY = MAP_WIDTH / 2;
+    cursorX = (MAP_WIDTH) / 2;
+    cursorY = MAP_HEIGHT / 2;
 }
 
 void RestaurantMap::drawCursor() {
+    Serial.print("Printing cursor at ");
+    Serial.print(cursorX);
+    Serial.print(", ");
+    Serial.print(cursorY);
+
     tft_->fillRect(cursorX, cursorY,
              CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
 }

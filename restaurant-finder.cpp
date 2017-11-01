@@ -18,8 +18,6 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };
 RestaurantMap restaurantMap(&tft);
 
-int yegX, yegY;
-int cursorX, cursorY;
 bool mapState;
 int selection = 0;
 
