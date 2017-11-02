@@ -18,6 +18,8 @@
 #define REST_START_BLOCK 4000000
 #define NUM_RESTAURANTS  1066
 
+#define NUM_TO_DISPLAY 30
+
 // We don't need to test the alignment because
 // we added the packed attribute
 struct Restaurant {
@@ -49,7 +51,7 @@ void getRestaurant(int restIndex, Restaurant* rest);
 
 void writeName(const char* name, int index);
 void changeSelection(int new_selection);
-void goToListMode();
-void get20Restaurants(int x, int y, Restaurant* restArr);
+void goToListMode(int x, int y);
+void getRestaurantList(int x, int y, Restaurant* restArr);
 
 #endif
