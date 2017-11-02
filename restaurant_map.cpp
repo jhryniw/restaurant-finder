@@ -118,6 +118,11 @@ void RestaurantMap::setMap(lcd_image_t* map_image) {
     map_image_ = map_image;
 }
 
+void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
+    mapX = lon_to_x(lon);
+    mapY = lat_to_y(lat);
+}
+
 void RestaurantMap::refresh() {
     lcd_image_draw(map_image_, tft_,
            // coordinates in top left

@@ -38,6 +38,7 @@ public:
     void drawCursor(int x, int y);
     void redrawCursor(joy_state_t joy_state);
     void moveMap();
+    void setPosition(int32_t lon, int32_t lat);
     void refresh();
 
     void setMap(lcd_image_t* map_image);
