@@ -6,7 +6,7 @@
 #include "rest_sd.h"
 
 Sd2Card card;
-Restaurant closest[NUM_TO_DISPLAY];
+RestDist distances[NUM_RESTAURANTS];
 extern
 
 /** Initializes the SD card */
@@ -95,8 +95,12 @@ void displayAllRestaurants(Restaurant* rest_array, int array_size) {
     }
 }
 
-void getRestaurantList(int x, int y, Restaurant* restArr) {
-	RestDist distances[NUM_RESTAURANTS];
+void getRestFromDist(Restaurant* rest, int dIndex) {
+  uint16_t index = distances[dIndex].index;
+  getRestaurant(index, rest);
+}
+
+void getRestaurantList(int x, int y) {
 
 	for (int i = 0; i < NUM_RESTAURANTS; i++) {
 		Restaurant tempRest;
@@ -109,8 +113,9 @@ void getRestaurantList(int x, int y, Restaurant* restArr) {
 	ssort(distances, NUM_RESTAURANTS);
 
 	for (int i = 0; i < NUM_TO_DISPLAY; i++) {
-		uint16_t index = distances[i].index;
-		getRestaurant(index, &restArr[i]);
+    Restaurant tempRest;
+    getRestFromDist(&tempRest, i);
+    writeName(tempRest.name, i);
 	}
 
 }
@@ -127,13 +132,19 @@ void changeSelection(int new_selection) {
     int temp = selection;
     selection = new_selection;
 
-    writeName(closest[temp].name, temp);
-    writeName(closest[selection].name, selection);
+    Restaurant tempRest;
+    Restaurant selRest;
+
+    getRestFromDist(&tempRest, temp);
+    getRestFromDist(&selRest, selection);
+
+    writeName(tempRest.name, temp);
+    writeName(selRest.name, selection);
 }
 
 void goToListMode(int x, int y) {
     tft.fillScreen(ILI9341_BLACK);
 
-    getRestaurantList(x, y, closest);
-    displayAllRestaurants(closest, NUM_TO_DISPLAY);
+    getRestaurantList(x, y);
+    //displayAllRestaurants(closest, NUM_TO_DISPLAY);
 }

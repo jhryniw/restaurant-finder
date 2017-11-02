@@ -52,6 +52,6 @@ void getRestaurant(int restIndex, Restaurant* rest);
 void writeName(const char* name, int index);
 void changeSelection(int new_selection);
 void goToListMode(int x, int y);
-void getRestaurantList(int x, int y, Restaurant* restArr);
+void getRestaurantList(int x, int y);
 
 #endif
