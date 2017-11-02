@@ -27,7 +27,7 @@ void changeState() {
 
     if (!mapState) {
         selection = 0;
-        goToListMode();
+        goToListMode(1000,1000);
     }
 }
 
