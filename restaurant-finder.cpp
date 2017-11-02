@@ -27,8 +27,8 @@ void changeState() {
 
     if (!mapState) {
         Serial.println("map to list.");
-        int32_t cursor_lon = x_to_lon(restaurantMap.mapX + restaurantMap.cursorX);
-        int32_t cursor_lat = y_to_lat(restaurantMap.mapY + restaurantMap.cursorY);
+        int32_t cursor_lon = x_to_lon(restaurantMap.mapX + restaurantMap.cursorX + CURSOR_SIZE/2);
+        int32_t cursor_lat = y_to_lat(restaurantMap.mapY + restaurantMap.cursorY + CURSOR_SIZE/2);
         Serial.print("Lon, Lat: ");
         Serial.print(cursor_lon);
         Serial.print(", ");
@@ -39,8 +39,16 @@ void changeState() {
     else {
         Serial.println("list to map.");
         tft.fillScreen(0);
-        
         // Get selected restaurant
+        Restaurant temp_rest;
+        getRestaurant(restaurantIndex[selection], & temp_rest);
+        int32_t rest_lon = temp_rest.lon;
+        int32_t rest_lat = temp_rest.lat;
+        Serial.print("Lon, Lat: ");
+        Serial.print(rest_lon);
+        Serial.print(", ");
+        Serial.println(rest_lat);
+        restaurantMap.setPosition(rest_lon, rest_lat);
         restaurantMap.refresh();
         restaurantMap.drawCursor(MAP_WIDTH/2-CURSOR_SIZE/2, MAP_HEIGHT/2-CURSOR_SIZE/2);
     }

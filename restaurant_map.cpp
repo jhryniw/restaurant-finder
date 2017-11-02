@@ -119,8 +119,10 @@ void RestaurantMap::setMap(lcd_image_t* map_image) {
 }
 
 void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
-    mapX = lon_to_x(lon);
-    mapY = lat_to_y(lat);
+    mapX = lon_to_x(lon)-MAP_WIDTH/2;
+    mapY = lat_to_y(lat)-MAP_HEIGHT/2;
+    Serial.println(mapX);
+    Serial.println(mapY);
 }
 
 void RestaurantMap::refresh() {
@@ -144,9 +146,9 @@ int32_t y_to_lat(int16_t y) {
 }
 
 int16_t lon_to_x(int32_t lon) {
-    return map(lon, LON_WEST, LON_EAST, 0, MAP_WIDTH);
+    return map(lon, LON_WEST, LON_EAST, 0, YEG_SIZE);
 }
 
 int16_t lat_to_y(int32_t lat) {
-    return map(lat, LAT_NORTH, LAT_SOUTH, 0, MAP_HEIGHT);
+    return map(lat, LAT_NORTH, LAT_SOUTH, 0, YEG_SIZE);
 }

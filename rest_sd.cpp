@@ -107,8 +107,8 @@ void displayAllRestaurants(int indexList[], int array_size) {
 //     }
 // }
 
-void getRestaurantList(int x, int y) {
-
+void getRestaurantList(int32_t x, int32_t y) {
+  uint32_t counter = 0;
   RestDist distances_all[NUM_RESTAURANTS];
 
 	for (int i = 0; i < NUM_RESTAURANTS; i++) {
@@ -157,7 +157,7 @@ void changeSelection(int new_selection) {
     writeName(temp_rest_new.name, selection);
 }
 
-void goToListMode(int x, int y) {
+void goToListMode(int32_t x, int32_t y) {
     tft.fillScreen(ILI9341_BLACK);
 
     getRestaurantList(x, y);
