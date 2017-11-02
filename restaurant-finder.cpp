@@ -18,21 +18,10 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };
 RestaurantMap restaurantMap(&tft);
 
-<<<<<<< HEAD
-int yegX, yegY;
-int cursorX, cursorY;
-bool mapState = true;
-=======
 bool mapState;
->>>>>>> origin/master
 int selection = 0;
 
 void changeState() {
-<<<<<<< HEAD
-    mapState = !mapState;
-    selection = 0;
-=======
->>>>>>> origin/master
     Serial.println("Changing state");
     mapState = !mapState;
 
@@ -53,28 +42,11 @@ void setup() {
 
    initSD();
 
-<<<<<<< HEAD
-   yegX = YEG_SIZE/2 - (MAP_WIDTH)/2;
-   yegY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
-
-   lcd_image_draw(&yegImage, &tft,
-                  // coordinates in top left
-                  yegX, yegY,
-                  // start coordinates on display
-                  0, 0,
-                  // Display width and height
-                  MAP_WIDTH, MAP_WIDTH);
-
-   // Cursor starts in the center of the screen
-   cursorX = MAP_WIDTH / 2;
-   cursorY = MAP_WIDTH / 2;
-=======
    mapState = true;
    restaurantMap.init();
    restaurantMap.setMap(&yegImage);
    restaurantMap.refresh();
    restaurantMap.drawCursor();
->>>>>>> origin/master
 
    initJoy();
 }
@@ -88,26 +60,6 @@ int main() {
 
         if (joy_state.button_pressed) {
             changeState();
-
-            if (mapState){
-                tft.fillScreen(ILI9341_BLACK);
-                lcd_image_draw(&yegImage, &tft,
-                               // coordinates in top left
-                               yegX, yegY,
-                               // start coordinates on display
-                               0, 0,
-                               // Display width and height
-                               MAP_WIDTH, MAP_WIDTH);
-
-                // Cursor starts in the center of the screen
-                cursorX = MAP_WIDTH / 2;
-                cursorY = MAP_WIDTH / 2;
-
-            }
-            else {
-                goToListMode();
-            }
-
             delay(100);
         }
 
