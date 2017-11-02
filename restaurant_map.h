@@ -19,10 +19,10 @@
 #define YEG_SIZE           2048
 #define CURSOR_SIZE        10
 
-#define LAT_NORTH 5361858l
-#define LAT_SOUTH 5340953l
-#define LON_WEST -11368652l
-#define LON_EAST -11333496l
+#define LAT_NORTH 5361858l // bigger
+#define LAT_SOUTH 5340953l // smaller
+#define LON_WEST -11368652l // smaller
+#define LON_EAST -11333496l // bigger
 
 class RestaurantMap {
 public:
@@ -40,7 +40,7 @@ public:
     void moveMap();
     void setPosition(int32_t lon, int32_t lat);
     void refresh();
-
+    
     void setMap(lcd_image_t* map_image);
 
 

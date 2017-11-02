@@ -96,17 +96,6 @@ void displayAllRestaurants(int indexList[], int array_size) {
     }
 }
 
-// void displayAllRestaurants(Restaurant* rest_array, int array_size) {
-//     tft.setTextSize(TEXT_SIZE);
-//     tft.setCursor(0, 0);
-//     tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
-//     tft.setTextWrap(false);
-//
-//     for (int i = 0; i < array_size; i++) {
-//         writeName(rest_array[i].name, i);
-//     }
-// }
-
 void getRestaurantList(int32_t x, int32_t y) {
   uint32_t counter = 0;
   RestDist distances_all[NUM_RESTAURANTS];
@@ -125,13 +114,13 @@ void getRestaurantList(int32_t x, int32_t y) {
     restaurantIndex[i] = distances_all[i].index;
     Restaurant temp_rest;
     getRestaurant(distances_all[i].index, &temp_rest);
-    Serial.print(temp_rest.name);
-    Serial.print(". Lon/Lat: ");
-    Serial.print(temp_rest.lon);
-    Serial.print(", ");
-    Serial.print(temp_rest.lat);
-    Serial.print(". Manhattan dist: ");
-    Serial.println(distances_all[i].dist);
+    // Serial.print(temp_rest.name);
+    // Serial.print(". Lon/Lat: ");
+    // Serial.print(temp_rest.lon);
+    // Serial.print(", ");
+    // Serial.print(temp_rest.lat);
+    // Serial.print(". Manhattan dist: ");
+    // Serial.println(distances_all[i].dist);
 	}
 
 }

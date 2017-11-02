@@ -21,10 +21,10 @@ void RestaurantMap::init() {
 }
 
 void RestaurantMap::drawCursor() {
-    Serial.print("Cursor: ");
-    Serial.print(cursorX);
-    Serial.print(", ");
-    Serial.println(cursorY);
+    // Serial.print("Cursor: ");
+    // Serial.print(cursorX);
+    // Serial.print(", ");
+    // Serial.println(cursorY);
 
     tft_->fillRect(cursorX, cursorY,
              CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
@@ -109,10 +109,26 @@ void RestaurantMap::setMap(lcd_image_t* map_image) {
 }
 
 void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
-    mapX = lon_to_x(lon)-MAP_WIDTH/2;
-    mapY = lat_to_y(lat)-MAP_HEIGHT/2;
-    Serial.println(mapX);
-    Serial.println(mapY);
+    int16_t x = lon_to_x(lon)-MAP_WIDTH/2;
+    int16_t y = lat_to_y(lat)-MAP_HEIGHT/2;
+
+    mapX = constrain(x, 0, YEG_SIZE - MAP_WIDTH);
+    mapY = constrain(y, 0, YEG_SIZE - MAP_HEIGHT);
+
+    if (mapX != x) {
+        int16_t dx = x - mapX;
+        cursorX = (MAP_WIDTH / 2) + dx;
+        cursorX = constrain(cursorX, 0, MAP_WIDTH - CURSOR_SIZE);
+    }
+
+    if (mapY != y) {
+        int16_t dy = y - mapY;
+        cursorY = (MAP_HEIGHT / 2) + dy;
+        cursorY = constrain(cursorY, 0, MAP_HEIGHT - CURSOR_SIZE);
+    }
+
+    refresh();
+    drawCursor();
 }
 
 void RestaurantMap::refresh() {
