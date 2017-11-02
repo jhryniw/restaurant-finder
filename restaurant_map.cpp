@@ -119,10 +119,24 @@ void RestaurantMap::setMap(lcd_image_t* map_image) {
 }
 
 void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
-    mapX = lon_to_x(lon)-MAP_WIDTH/2;
-    mapY = lat_to_y(lat)-MAP_HEIGHT/2;
-    Serial.println(mapX);
-    Serial.println(mapY);
+    int32_t x = lon_to_x(lon)-MAP_WIDTH/2;
+    int32_t y = lat_to_y(lat)-MAP_HEIGHT/2;
+
+    mapX = constrain(x, 0, YEG_SIZE - MAP_WIDTH);
+    mapY = constrain(y, 0, YEG_SIZE - MAP_HEIGHT);
+
+    if (mapX != x) {
+        cursorX = (MAP_WIDTH / 2) + ((int32_t)mapX - x);
+        cursorX = constrain(cursorX, 0, MAP_WIDTH - CURSOR_SIZE);
+    }
+
+    else if (mapY != y) {
+        cursorY = (MAP_HEIGHT / 2) + ((int32_t)mapY - y);
+        cursorY = constrain(cursorY, 0, MAP_HEIGHT - CURSOR_SIZE);
+    }
+
+    refresh();
+    drawCursor();
 }
 
 void RestaurantMap::refresh() {
