@@ -12,8 +12,8 @@ RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
 
 void RestaurantMap::init() {
     // Map starts in the center of the map
-    mapX = 10; //YEG_SIZE/2 - (MAP_WIDTH)/2;
-    mapY = 10; //YEG_SIZE/2 - DISPLAY_WIDTH/2;
+    mapX = YEG_SIZE/2 - (MAP_WIDTH)/2;
+    mapY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
 
     // Cursor starts in the center of the screen
     cursorX = (MAP_WIDTH) / 2;
@@ -28,6 +28,13 @@ void RestaurantMap::drawCursor() {
 
     tft_->fillRect(cursorX, cursorY,
              CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
+}
+
+void RestaurantMap::drawCursor(int x, int y) {
+    cursorX = x;
+    cursorY = y;
+
+    drawCursor();
 }
 
 /* Redraw the cursor if it has moved */

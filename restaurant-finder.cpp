@@ -29,6 +29,12 @@ void changeState() {
         selection = 0;
         goToListMode();
     }
+    else {
+
+        // Get selected restaurant
+        restaurantMap.refresh();
+        restaurantMap.drawCursor();
+    }
 }
 
 void setup() {
@@ -38,7 +44,7 @@ void setup() {
 
    tft.begin();
    tft.setRotation(3);
-   //tft.fillScreen(0);
+   tft.fillScreen(0);
 
    initSD();
 

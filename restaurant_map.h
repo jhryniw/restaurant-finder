@@ -30,11 +30,13 @@ public:
 
     void init();
     void drawCursor();
+    void drawCursor(int x, int y);
     void redrawCursor(joy_state_t joy_state);
     void moveMap();
     void refresh();
 
     void setMap(lcd_image_t* map_image);
+
 
 private:
     Adafruit_ILI9341* tft_;
