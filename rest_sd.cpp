@@ -6,7 +6,8 @@
 #include "rest_sd.h"
 
 Sd2Card card;
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+Restaurant closest20[20];
+extern
 
 /** Initializes the SD card */
 void initSD() {
@@ -14,12 +15,6 @@ void initSD() {
     // We assume this has been called
     // tft.begin();
 
-    Serial.print("Initializing SD card...");
-    if (!SD.begin(SD_CS)) {
-        Serial.print("failed! Is it inserted properly?");
-        while(true) {}
-    }
-    
     Serial.print("Initializing SPI communication for raw reads...");
     if (!card.init(SPI_HALF_SPEED, SD_CS)) {
         Serial.println("failed! Is the card inserted properly?");
@@ -60,7 +55,7 @@ void ssort(RestDist *rest_dist, int len) {
 void getRestaurant(int restIndex, Restaurant* rest) {
     // store cache as local static variables
     static Restaurant restCache[8];
-    static uint32_t lastBlock = -1;
+    static uint32_t lastBlock = REST_START_BLOCK - 1;
 
     uint32_t blockNum = REST_START_BLOCK + restIndex / 8;
 
@@ -76,7 +71,7 @@ void getRestaurant(int restIndex, Restaurant* rest) {
     *rest = restCache[restIndex % 8];
 }
 
-void writeName(const char* name, int index, bool selection) {
+void writeName(const char* name, int index) {
     tft.setCursor(0, ((TEXT_SIZE * 7) + 1) * index);
 
     if (index == selection) {
@@ -120,26 +115,25 @@ void get20Restaurants(int x, int y, Restaurant* restArr) {
 
 }
 
-void changeSelection(int& selection, int new_selection) {
+void changeSelection(int new_selection) {
 
-    if (new_selection < 0 || new_selection >= 20) return;
+    if (new_selection >= 20) {
+        new_selection = new_selection % 20;
+    }
+    else if (new_selection < 0) {
+        new_selection += 20;
+    }
 
     int temp = selection;
     selection = new_selection;
 
-    //writeName(rests[temp].name, temp, true);
-    //writeName(rests[selection].name, selection);
+    writeName(closest20[temp].name, temp);
+    writeName(closest20[selection].name, selection);
 }
 
 void goToListMode() {
     tft.fillScreen(ILI9341_BLACK);
 
-    Restaurant closest20[20];
     get20Restaurants(1000, 1000, closest20);
-
-    for (int i = 0; i < 20; i++) {
-        getRestaurant(i, &closest20[i]);
-    }
-
     displayAllRestaurants(closest20, 20);
 }
