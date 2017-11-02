@@ -94,18 +94,8 @@ void RestaurantMap::moveMap() {
 
     // If the edges of overall map is reached,
     // map is redrawn only until the edge
-    if (mapX < 0) {
-        mapX = 0;
-    }
-    else if (mapX > YEG_SIZE-MAP_WIDTH) {
-        mapX = YEG_SIZE-MAP_WIDTH;
-    }
-    else if (mapY < 0) {
-        mapY = 0;
-    }
-    else if (mapY > YEG_SIZE-MAP_HEIGHT) {
-        mapY = YEG_SIZE-MAP_HEIGHT;
-    }
+    mapX = constrain(mapX, 0, YEG_SIZE-MAP_WIDTH);
+    mapY = constrain(mapY, 0, YEG_SIZE-MAP_HEIGHT);
 
     // Redraws map and updates cursor
     if (moved) {

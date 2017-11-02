@@ -48,9 +48,10 @@ void changeState() {
         Serial.print(rest_lon);
         Serial.print(", ");
         Serial.println(rest_lat);
-        restaurantMap.setPosition(rest_lon, rest_lat);
+        restaurantMap.setPosition(LAT_NORTH+10, rest_lat);
+        //restaurantMap.setPosition(rest_lon, rest_lat);
         restaurantMap.refresh();
-        restaurantMap.drawCursor(MAP_WIDTH/2-CURSOR_SIZE/2, MAP_HEIGHT/2-CURSOR_SIZE/2);
+        //restaurantMap.drawCursor(MAP_WIDTH/2-CURSOR_SIZE/2, MAP_HEIGHT/2-CURSOR_SIZE/2);
     }
 }
 
