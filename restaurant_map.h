@@ -14,10 +14,15 @@
 
 #define DISPLAY_WIDTH      320
 #define DISPLAY_HEIGHT     240
-#define MAP_WIDTH          DISPLAY_WIDTH-48
+#define MAP_WIDTH          (DISPLAY_WIDTH-48)
 #define MAP_HEIGHT         DISPLAY_HEIGHT
 #define YEG_SIZE           2048
 #define CURSOR_SIZE        10
+
+#define LAT_NORTH 5361858l
+#define LAT_SOUTH 5340953l
+#define LON_WEST -11368652l
+#define LON_EAST -11333496l
 
 class RestaurantMap {
 public:
@@ -42,5 +47,11 @@ private:
     Adafruit_ILI9341* tft_;
     lcd_image_t* map_image_;
 };
+
+int32_t x_to_lon(int16_t x);
+int32_t y_to_lat(int16_t y);
+int16_t lon_to_x(int32_t lon);
+int16_t lat_to_y(int32_t lat);
+
 
 #endif

@@ -12,19 +12,19 @@ RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
 
 void RestaurantMap::init() {
     // Map starts in the center of the map
-    mapX = YEG_SIZE/2 - (MAP_WIDTH)/2;
+    mapX = YEG_SIZE/2 - MAP_WIDTH/2;
     mapY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
 
     // Cursor starts in the center of the screen
-    cursorX = (MAP_WIDTH) / 2;
-    cursorY = MAP_HEIGHT / 2;
+    cursorX = MAP_WIDTH / 2 - CURSOR_SIZE / 2;
+    cursorY = MAP_HEIGHT / 2 - CURSOR_SIZE / 2;
 }
 
 void RestaurantMap::drawCursor() {
-    Serial.print("Printing cursor at ");
+    Serial.print("Cursor: ");
     Serial.print(cursorX);
     Serial.print(", ");
-    Serial.print(cursorY);
+    Serial.println(cursorY);
 
     tft_->fillRect(cursorX, cursorY,
              CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
@@ -126,4 +126,22 @@ void RestaurantMap::refresh() {
            0, 0,
            // Display width and height
            MAP_WIDTH, DISPLAY_WIDTH);
+}
+
+// These functions convert between x/y map position and lat/lon
+// (and vice versa.)
+int32_t x_to_lon(int16_t x) {
+    return map(x, 0, YEG_SIZE, LON_WEST, LON_EAST);
+}
+
+int32_t y_to_lat(int16_t y) {
+    return map(y, 0, YEG_SIZE, LAT_NORTH, LAT_SOUTH);
+}
+
+int16_t lon_to_x(int32_t lon) {
+    return map(lon, LON_WEST, LON_EAST, 0, MAP_WIDTH);
+}
+
+int16_t lat_to_y(int32_t lat) {
+    return map(lat, LAT_NORTH, LAT_SOUTH, 0, MAP_HEIGHT);
 }

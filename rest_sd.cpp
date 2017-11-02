@@ -6,8 +6,7 @@
 #include "rest_sd.h"
 
 Sd2Card card;
-RestDist distances[NUM_RESTAURANTS];
-extern
+int restaurantIndex[NUM_TO_DISPLAY];
 
 /** Initializes the SD card */
 void initSD() {
@@ -84,38 +83,55 @@ void writeName(const char* name, int index) {
     }
 }
 
-void displayAllRestaurants(Restaurant* rest_array, int array_size) {
+void displayAllRestaurants(int indexList[], int array_size) {
     tft.setTextSize(TEXT_SIZE);
     tft.setCursor(0, 0);
     tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
     tft.setTextWrap(false);
 
     for (int i = 0; i < array_size; i++) {
-        writeName(rest_array[i].name, i);
+        Restaurant temp_rest;
+        getRestaurant(restaurantIndex[i], &temp_rest);
+        writeName(temp_rest.name, i);
     }
 }
 
-void getRestFromDist(Restaurant* rest, int dIndex) {
-  uint16_t index = distances[dIndex].index;
-  getRestaurant(index, rest);
-}
+// void displayAllRestaurants(Restaurant* rest_array, int array_size) {
+//     tft.setTextSize(TEXT_SIZE);
+//     tft.setCursor(0, 0);
+//     tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
+//     tft.setTextWrap(false);
+//
+//     for (int i = 0; i < array_size; i++) {
+//         writeName(rest_array[i].name, i);
+//     }
+// }
 
 void getRestaurantList(int x, int y) {
 
-	for (int i = 0; i < NUM_RESTAURANTS; i++) {
-		Restaurant tempRest;
-		getRestaurant(i, &tempRest);
+  RestDist distances_all[NUM_RESTAURANTS];
 
-		distances[i].index = i;
-		distances[i].dist = abs(x-tempRest.lon) + abs(y-tempRest.lat);
+	for (int i = 0; i < NUM_RESTAURANTS; i++) {
+		Restaurant temp_rest;
+		getRestaurant(i, &temp_rest);
+
+		distances_all[i].index = i;
+		distances_all[i].dist = abs(x-temp_rest.lon) + abs(y-temp_rest.lat);
 	}
 
-	ssort(distances, NUM_RESTAURANTS);
+	ssort(distances_all, NUM_RESTAURANTS);
 
 	for (int i = 0; i < NUM_TO_DISPLAY; i++) {
-    Restaurant tempRest;
-    getRestFromDist(&tempRest, i);
-    writeName(tempRest.name, i);
+    restaurantIndex[i] = distances_all[i].index;
+    Restaurant temp_rest;
+    getRestaurant(distances_all[i].index, &temp_rest);
+    Serial.print(temp_rest.name);
+    Serial.print(". Lon/Lat: ");
+    Serial.print(temp_rest.lon);
+    Serial.print(", ");
+    Serial.print(temp_rest.lat);
+    Serial.print(". Manhattan dist: ");
+    Serial.println(distances_all[i].dist);
 	}
 
 }
@@ -132,19 +148,18 @@ void changeSelection(int new_selection) {
     int temp = selection;
     selection = new_selection;
 
-    Restaurant tempRest;
-    Restaurant selRest;
+    Restaurant temp_rest_old, temp_rest_new;
 
-    getRestFromDist(&tempRest, temp);
-    getRestFromDist(&selRest, selection);
+    getRestaurant(restaurantIndex[temp], &temp_rest_old);
+    getRestaurant(restaurantIndex[selection], &temp_rest_new);
 
-    writeName(tempRest.name, temp);
-    writeName(selRest.name, selection);
+    writeName(temp_rest_old.name, temp);
+    writeName(temp_rest_new.name, selection);
 }
 
 void goToListMode(int x, int y) {
     tft.fillScreen(ILI9341_BLACK);
 
     getRestaurantList(x, y);
-    //displayAllRestaurants(closest, NUM_TO_DISPLAY);
+    displayAllRestaurants(restaurantIndex, NUM_TO_DISPLAY);
 }

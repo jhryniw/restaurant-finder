@@ -22,18 +22,26 @@ bool mapState;
 int selection = 0;
 
 void changeState() {
-    Serial.println("Changing state");
+    Serial.print("Changing state from ");
     mapState = !mapState;
 
     if (!mapState) {
+        Serial.println("map to list.");
+        int32_t cursor_lon = x_to_lon(restaurantMap.cursorX);
+        int32_t cursor_lat = y_to_lat(restaurantMap.cursorY);
+        Serial.print("Lon, Lat: ");
+        Serial.print(cursor_lon);
+        Serial.print(", ");
+        Serial.println(cursor_lat);
         selection = 0;
-        goToListMode(1000,1000);
+        goToListMode(cursor_lon, cursor_lat);
     }
     else {
-
+        Serial.println("list to map.");
+         tft.fillScreen(0);
         // Get selected restaurant
         restaurantMap.refresh();
-        restaurantMap.drawCursor();
+        restaurantMap.drawCursor(MAP_WIDTH/2-CURSOR_SIZE/2, MAP_HEIGHT/2-CURSOR_SIZE/2);
     }
 }
 
@@ -57,6 +65,8 @@ void setup() {
    initJoy();
 }
 
+
+
 int main() {
     setup();
 
@@ -72,7 +82,6 @@ int main() {
         if (mapState) {
             // Redraw the cursor
             restaurantMap.redrawCursor(joy_state);
-
             restaurantMap.moveMap();
 
             delay(5);
