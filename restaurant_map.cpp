@@ -1,5 +1,13 @@
+/**
+* @file restaurant_map.cpp
+*
+* @author James Hryniw 1431912
+* @author Songhui Zhang 1499982
+*/
+
 #include "restaurant_map.h"
 
+/** Build restaurant map */
 RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
     tft_(tft), mapX(0), mapY(0), cursorX(0), cursorY(0)
 {
@@ -10,6 +18,7 @@ RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
     }
 }
 
+/** Initializing restaurant map */
 void RestaurantMap::init() {
     // Map starts in the center of the map
     mapX = YEG_SIZE/2 - MAP_WIDTH/2;
@@ -20,16 +29,13 @@ void RestaurantMap::init() {
     cursorY = MAP_HEIGHT / 2 - CURSOR_SIZE / 2;
 }
 
+/** Draws the cursor at (cursorX, cursorY) */
 void RestaurantMap::drawCursor() {
-    // Serial.print("Cursor: ");
-    // Serial.print(cursorX);
-    // Serial.print(", ");
-    // Serial.println(cursorY);
-
     tft_->fillRect(cursorX, cursorY,
              CURSOR_SIZE, CURSOR_SIZE, ILI9341_RED);
 }
 
+/** Draws the cursor at specified (x, y) */
 void RestaurantMap::drawCursor(int x, int y) {
     cursorX = x;
     cursorY = y;
@@ -37,7 +43,10 @@ void RestaurantMap::drawCursor(int x, int y) {
     drawCursor();
 }
 
-/* Redraw the cursor if it has moved */
+/**
+ * Redraw the cursor if it has moved
+ * @param joy_state the joystick state
+ */
 void RestaurantMap::redrawCursor(joy_state_t joy_state) {
 
     // i.e the joystick is not in the center (will move)
@@ -63,8 +72,10 @@ void RestaurantMap::redrawCursor(joy_state_t joy_state) {
     }
 }
 
-// If cursor is moved to edge of screen, moves map in that direction
-// and relocates cursorX or cursorY to a suitable location on screen
+/**
+ * If cursor is moved to edge of screen, moves map in that direction
+ * and relocates cursorX or cursorY to a suitable location on screen
+ */
 void RestaurantMap::moveMap() {
     bool moved = true;
 
@@ -104,39 +115,50 @@ void RestaurantMap::moveMap() {
     }
 }
 
+/** Set the map image */
 void RestaurantMap::setMap(lcd_image_t* map_image) {
     map_image_ = map_image;
 }
 
+/** Move the map to center on (lon, lat) */
 void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
     int16_t x = lon_to_x(lon)-MAP_WIDTH/2;
     int16_t y = lat_to_y(lat)-MAP_HEIGHT/2;
 
+    // Do not let the map go off the edge of our image
     mapX = constrain(x, 0, YEG_SIZE - MAP_WIDTH);
     mapY = constrain(y, 0, YEG_SIZE - MAP_HEIGHT);
 
+    // If we are off the map in x, apply the difference to the cursor
     if (mapX != x) {
         int16_t dx = x - mapX;
         cursorX = (MAP_WIDTH / 2) + dx;
+        // Contrain to the edge of the image
         cursorX = constrain(cursorX, 0, MAP_WIDTH - CURSOR_SIZE);
     }
     else {
+        // Otherwise center the cursor
         cursorX = MAP_WIDTH / 2;
     }
 
+    // If we are off the map in y, apply the difference to the cursor
     if (mapY != y) {
         int16_t dy = y - mapY;
         cursorY = (MAP_HEIGHT / 2) + dy;
+        // Contrain to the edge of the image
         cursorY = constrain(cursorY, 0, MAP_HEIGHT - CURSOR_SIZE);
     }
     else {
+        // Otherwise center the cursor
         cursorY = MAP_HEIGHT / 2;
     }
 
+    // Apply result to the screen
     refresh();
     drawCursor();
 }
 
+/** Redraws the map at the current map position */
 void RestaurantMap::refresh() {
     lcd_image_draw(map_image_, tft_,
            // coordinates in top left
@@ -147,20 +169,22 @@ void RestaurantMap::refresh() {
            MAP_WIDTH, DISPLAY_WIDTH);
 }
 
-// These functions convert between x/y map position and lat/lon
-// (and vice versa.)
+/** Convert from x position to longitude */
 int32_t x_to_lon(int16_t x) {
     return map(x, 0, YEG_SIZE, LON_WEST, LON_EAST);
 }
 
+/** Convert from y position to latitude */
 int32_t y_to_lat(int16_t y) {
     return map(y, 0, YEG_SIZE, LAT_NORTH, LAT_SOUTH);
 }
 
+/** Convert from longitude to x position */
 int16_t lon_to_x(int32_t lon) {
     return map(lon, LON_WEST, LON_EAST, 0, YEG_SIZE);
 }
 
+/** Convert from latitude to y position */
 int16_t lat_to_y(int32_t lat) {
     return map(lat, LAT_NORTH, LAT_SOUTH, 0, YEG_SIZE);
 }
