@@ -1,10 +1,14 @@
 Names: Songhui Zhang 149982 James Hryniw 1431912
 Assignment 2: Restaurant part A
 
+# Restaurant Finder
+A program for finding restaurants in Edmonton
+
 Accessories:
-  * Arduino Mega
-  * Adafruit ILI9341 Breakout (including formatted SD card)
-  * Joystick
+  * 1x Arduino MEGA board
+  * 1x Adafruit ILI9341 Breakout Board
+  * 1x SainSmart JoyStick Module
+  * 1x SD card containing "yeg-big.lcd" file with map of Edmonton
 
 Wiring instructions:
   Adafruit:
@@ -38,7 +42,7 @@ Program instructions:
     faster the cursor moves.
   * Moving the cursor to the edge of the displayed map (not including
     the black bar) will move the map in that direction.
-	* Clicking the joystick in map mode will find the closest 30 restaurants
+	* Clicking the joystick in map mode will list the closest 30 restaurants
 		from the cursor.
 	* Selecting a restaurant in list mode then clicking the cursor will center
 		the cursor and map on the selection.
