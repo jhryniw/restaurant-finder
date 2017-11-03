@@ -120,11 +120,17 @@ void RestaurantMap::setPosition(int32_t lon, int32_t lat) {
         cursorX = (MAP_WIDTH / 2) + dx;
         cursorX = constrain(cursorX, 0, MAP_WIDTH - CURSOR_SIZE);
     }
+    else {
+        cursorX = MAP_WIDTH / 2;
+    }
 
     if (mapY != y) {
         int16_t dy = y - mapY;
         cursorY = (MAP_HEIGHT / 2) + dy;
         cursorY = constrain(cursorY, 0, MAP_HEIGHT - CURSOR_SIZE);
+    }
+    else {
+        cursorY = MAP_HEIGHT / 2;
     }
 
     refresh();

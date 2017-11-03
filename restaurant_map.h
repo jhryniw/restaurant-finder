@@ -26,10 +26,10 @@
 
 class RestaurantMap {
 public:
-    int mapX;
-    int mapY;
-    int cursorX;
-    int cursorY;
+    int16_t mapX;
+    int16_t mapY;
+    int16_t cursorX;
+    int16_t cursorY;
 
     RestaurantMap(Adafruit_ILI9341* tft);
 
@@ -40,7 +40,7 @@ public:
     void moveMap();
     void setPosition(int32_t lon, int32_t lat);
     void refresh();
-    
+
     void setMap(lcd_image_t* map_image);
 
 
