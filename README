@@ -1,12 +1,44 @@
-Name:
-ID:
-Week:
-Acknowledgements:
+Names: Songhui Zhang 149982 James Hryniw 1431912
+Assignment 2: Restaurant part A
 
 Accessories:
+  * Arduino Mega
+  * Adafruit ILI9341 Breakout (including formatted SD card)
+  * Joystick
 
 Wiring instructions:
+  Adafruit:
+    (Left is Adafruit, right is Arduino)
+    * GND   <>  GND
+    * Vin   <>  5V
+    * CLK   <>  52
+    * MISO  <>  50
+    * MOSI  <>  51
+    * CS    <>  10
+    * D/C   <>  9
+    * Y+    <>  A2
+    * X+    <>  4
+    * Y-    <>  5
+    * X-    <>  A3
+    * CCS   <>  6
+
+  Joystick:
+    (Left is joystick, right is Arduino)
+    * GND   <>  GND
+    * +5V   <>  5V
+    * VRx   <>  A1
+    * VRy   <>  A0
+    * SW    <>  2
 
 Program instructions:
+  * Wire Arduino as above and connect it to the computer.
+  * In terminal, navigate to program directory and enter "make upload".
+    To check if SD card is connected, also enter "serial-mon".
+  * The joystick controls the cursor; the farther it is pressed, the
+    faster the cursor moves.
+  * Moving the cursor to the edge of the displayed map (not including
+    the black bar) will move the map in that direction.
 
 Notes:
+  * The program assumes that the joysticks are calibrated similarly.
+    If they are not, the cursor will move by itself.
