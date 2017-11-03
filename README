@@ -38,6 +38,10 @@ Program instructions:
     faster the cursor moves.
   * Moving the cursor to the edge of the displayed map (not including
     the black bar) will move the map in that direction.
+	* Clicking the joystick in map mode will find the closest 30 restaurants
+		from the cursor.
+	* Selecting a restaurant in list mode then clicking the cursor will center
+		the cursor and map on the selection.
 
 Notes:
   * The program assumes that the joysticks are calibrated similarly.
