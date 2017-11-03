@@ -56,6 +56,7 @@ public:
 
     /**
      * Redraw the cursor if it has moved
+     * 
      * @param joy_state the joystick state
      */
     void redrawCursor(joy_state_t joy_state);

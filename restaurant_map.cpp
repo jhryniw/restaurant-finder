@@ -43,10 +43,7 @@ void RestaurantMap::drawCursor(int x, int y) {
     drawCursor();
 }
 
-/**
- * Redraw the cursor if it has moved
- * @param joy_state the joystick state
- */
+/** Redraw the cursor if it has moved */
 void RestaurantMap::redrawCursor(joy_state_t joy_state) {
 
     // i.e the joystick is not in the center (will move)
