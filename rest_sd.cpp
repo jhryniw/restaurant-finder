@@ -1,6 +1,7 @@
-/*
+/**
  * @file rest_sd.cpp
  * @author James Hryniw 1431912
+ * @author Songhui Zhang 1499982
  */
 
 #include "rest_sd.h"
@@ -50,6 +51,8 @@ void ssort(RestDist *rest_dist, int len) {
 /**
  * Gets a restaurant at a particular index
  * optimized for consecutive calls to the same block of memory
+ * @param restIndex Index number of restaurant in memory
+ * @param rest Pointer to Restaurant struct to change
  */
 void getRestaurant(int restIndex, Restaurant* rest) {
     // store cache as local static variables
@@ -70,6 +73,13 @@ void getRestaurant(int restIndex, Restaurant* rest) {
     *rest = restCache[restIndex % 8];
 }
 
+/**
+ * Prints name of restaurant
+ * Text and background colours change
+ * if restaurant is currently selected
+ * @param name String to display
+ * @param index Index number of restaurant in displayed list
+ */
 void writeName(const char* name, int index) {
     tft.setCursor(0, ((TEXT_SIZE * 7) + 1) * index);
 
@@ -83,23 +93,37 @@ void writeName(const char* name, int index) {
     }
 }
 
-void displayAllRestaurants(int indexList[], int array_size) {
+/**
+ * Sets up screen to display restaurant names
+ * Then prints each once
+ */
+void displayAllRestaurants() {
     tft.setTextSize(TEXT_SIZE);
     tft.setCursor(0, 0);
     tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
     tft.setTextWrap(false);
 
-    for (int i = 0; i < array_size; i++) {
+    // Gets restaurant order from global restaurantIndex[]
+    // of size 30
+    for (int i = 0; i < NUM_TO_DISPLAY; i++) {
         Restaurant temp_rest;
         getRestaurant(restaurantIndex[i], &temp_rest);
         writeName(temp_rest.name, i);
     }
 }
 
+/**
+ * Finds the closest 30 restaurants from cursor position
+ * in Manhattan distance at time of click and updates restaurantIndex[] values.
+ * @param x Longitude of cursor
+ * @param y Latitude of cursor
+ */
 void getRestaurantList(int32_t x, int32_t y) {
-  uint32_t counter = 0;
+  // Temporary array to save memory
   RestDist distances_all[NUM_RESTAURANTS];
 
+  // Enters restaurant index and Manhattan distance
+  // for each restaurant then sorts it by closest distance.
 	for (int i = 0; i < NUM_RESTAURANTS; i++) {
 		Restaurant temp_rest;
 		getRestaurant(i, &temp_rest);
@@ -107,26 +131,25 @@ void getRestaurantList(int32_t x, int32_t y) {
 		distances_all[i].index = i;
 		distances_all[i].dist = abs(x-temp_rest.lon) + abs(y-temp_rest.lat);
 	}
-
 	ssort(distances_all, NUM_RESTAURANTS);
 
+  // Updates global restaurantIndex[] with
+  // index values of closest 30 restaurants
 	for (int i = 0; i < NUM_TO_DISPLAY; i++) {
     restaurantIndex[i] = distances_all[i].index;
     Restaurant temp_rest;
     getRestaurant(distances_all[i].index, &temp_rest);
-    // Serial.print(temp_rest.name);
-    // Serial.print(". Lon/Lat: ");
-    // Serial.print(temp_rest.lon);
-    // Serial.print(", ");
-    // Serial.print(temp_rest.lat);
-    // Serial.print(". Manhattan dist: ");
-    // Serial.println(distances_all[i].dist);
 	}
 
 }
 
+/**
+ * Updates value of selection when cursor moves in list mode.
+ * Rolls over/under if cursor goes too low/high.
+ * Also reprints last/currently selected restaurant names.
+ * @param new_selection Value of next selection
+ */
 void changeSelection(int new_selection) {
-
     if (new_selection >= NUM_TO_DISPLAY) {
         new_selection = new_selection % NUM_TO_DISPLAY;
     }
@@ -137,8 +160,8 @@ void changeSelection(int new_selection) {
     int temp = selection;
     selection = new_selection;
 
+    // Gets last/currently selected restaurants
     Restaurant temp_rest_old, temp_rest_new;
-
     getRestaurant(restaurantIndex[temp], &temp_rest_old);
     getRestaurant(restaurantIndex[selection], &temp_rest_new);
 
@@ -146,9 +169,15 @@ void changeSelection(int new_selection) {
     writeName(temp_rest_new.name, selection);
 }
 
+/**
+ * Called once when switching from map to list mode.
+ * Updates restaurantIndex[] and displays restaurants.
+ * @param x Longitude of cursor on click.
+ * @param y Latitude of cursor on click.
+ */
 void goToListMode(int32_t x, int32_t y) {
     tft.fillScreen(ILI9341_BLACK);
 
     getRestaurantList(x, y);
-    displayAllRestaurants(restaurantIndex, NUM_TO_DISPLAY);
+    displayAllRestaurants();
 }

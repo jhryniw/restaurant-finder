@@ -47,12 +47,42 @@ void initSD();
 /**
  * Gets a restaurant at a particular index
  * optimized for consecutive calls to the same block of memory
+ * @param restIndex Index number of restaurant in memory
+ * @param rest Pointer to Restaurant struct to change
  */
 void getRestaurant(int restIndex, Restaurant* rest);
 
+/**
+ * Prints name of restaurant
+ * Text and background colours change
+ * if restaurant is currently selected
+ * @param name String to display
+ * @param index Index number of restaurant in displayed list
+ */
 void writeName(const char* name, int index);
+
+/**
+ * Updates value of selection when cursor moves in list mode.
+ * Rolls over/under if cursor goes too low/high.
+ * Also reprints last/currently selected restaurant names.
+ * @param new_selection Value of next selection
+ */
 void changeSelection(int new_selection);
+
+/**
+ * Called once when switching from map to list mode.
+ * Updates restaurantIndex[] and displays restaurants.
+ * @param x Longitude of cursor on click.
+ * @param y Latitude of cursor on click.
+ */
 void goToListMode(int32_t x, int32_t y);
+
+/**
+ * Finds the closest 30 restaurants from cursor position
+ * in Manhattan distance at time of click and updates restaurantIndex[] values.
+ * @param x Longitude of cursor
+ * @param y Latitude of cursor
+ */
 void getRestaurantList(int32_t x, int32_t y);
 
 #endif
