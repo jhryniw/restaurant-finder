@@ -18,12 +18,23 @@
 #define TS_MAXX 920
 #define TS_MAXY 940
 
+#define SCREEN_WIDTH    320
+#define MAP_WIDTH       (SCREEN_WIDTH - 48)
+#define BUTTON_RADIUS   24
+#define BUTTON_DIAMETER (BUTTON_RADIUS * 2)
+#define BUTTON_X        (SCREEN_WIDTH - BUTTON_RADIUS)
+#define BORDER_WIDTH    2
+#define RATING_NUM      5
+#define RATING_SIZE     3
+#define RATING_WIDTH    (RATING_SIZE * 5)
+#define RATING_HEIGHT   (RATING_SIZE * 7)
+
 #define MINPRESSURE 10
 #define MAXPRESSURE 1000
 
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+extern TouchScreen ts;
 
 void initTouch(Adafruit_ILI9341* tft);
-void setSelectedRating(uint8_t* currRating, TSPoint p, Adafruit_ILI9341* tft);
+void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, TSPoint pc);
 
 #endif
