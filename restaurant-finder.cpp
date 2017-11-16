@@ -22,7 +22,7 @@ RestaurantMap restaurantMap(&tft);                              // The map insta
 bool mapState;                                                  // Mode: True if showing map, false if in list mode
 int selection = 0;                                              // Selected item in the list
 
-int minRating = 1;
+uint8_t minRating = 1;
 
 /**
  * Transition from the map mode to the list mode and vice-versa
@@ -98,6 +98,13 @@ int main() {
             // Redraw the cursor
             restaurantMap.redrawCursor(joy_state);
             restaurantMap.moveMap();
+
+            TSPoint p = ts.getPoint();
+            Serial.print("x: ");
+            Serial.print(p.x);
+            Serial.print("y: ");
+            Serial.println(p.y);
+            setSelectedRating(&tft, minRating, p);
 
             delay(5);
         }

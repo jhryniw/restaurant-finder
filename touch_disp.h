@@ -18,6 +18,9 @@
 #define TS_MAXX 920
 #define TS_MAXY 940
 
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
+
 #define SCREEN_WIDTH    320
 #define MAP_WIDTH       (SCREEN_WIDTH - 48)
 #define BUTTON_RADIUS   24
@@ -29,8 +32,6 @@
 #define RATING_WIDTH    (RATING_SIZE * 5)
 #define RATING_HEIGHT   (RATING_SIZE * 7)
 
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
 
 extern TouchScreen ts;
 

@@ -26,31 +26,21 @@ void initTouch(Adafruit_ILI9341* tft) {
 
 void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, TSPoint p) {
 
+    bool ratingChanged = false;
+
     if (p.x >= MAP_WIDTH) {
-        uint8_t selected = RATING_NUM - (p.y / (BUTTON_RADIUS * 2));
-        if (selected < 1) {
-            selected = 1;
+        ratingChanged = currRating != RATING_NUM - (p.y / (BUTTON_RADIUS * 2));
+        currRating = RATING_NUM - (p.y / (BUTTON_RADIUS * 2));
+        if (currRating < 1) {
+            currRating = 1;
+        }
+
+        for (uint8_t rating = 1; rating <= RATING_NUM && ratingChanged; rating++) {
+
+            bool on = rating > currRating;
+            drawRating(tft, rating, on);
+
         }
     }
-
-
-  for (int i = 0; i < RATING_NUM; i++) {
-
-    /*if ( isInRadius(BUTTON_X, BUTTON_RADIUS * (2*i + 1), p.x, p.y, BUTTON_RADIUS) ) {
-      *currRating = (uint8_t) 5-i;
-
-      for (int j = i; j < 5; j++) {
-        tft->fillCircle(296, 24+48*j, BUTTON_RADIUS, ILI9341_BLACK);
-        tft->drawCircle(296, 24+48*j, BUTTON_RADIUS, ILI9341_RED);
-
-        tft->setCursor(296, 24+48*j);
-        tft->setTextColor(ILI9341_WHITE, ILI9341_BLACK);
-        tft->print(5-j);
-      }
-
-      break;
-  }*/
-
-  }
 
 }

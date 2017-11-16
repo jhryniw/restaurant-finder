@@ -11,15 +11,18 @@
 RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
     tft_(tft), mapX(0), mapY(0), cursorX(0), cursorY(0)
 {
+
+}
+
+/** Initializing restaurant map */
+void RestaurantMap::init() {
+
     Serial.print("Initializing SD card...");
     if (!SD.begin(SD_CS)) {
         Serial.print("failed! Is it inserted properly?");
         while(true) {}
     }
-}
-
-/** Initializing restaurant map */
-void RestaurantMap::init() {
+    
     // Map starts in the center of the map
     mapX = YEG_SIZE/2 - MAP_WIDTH/2;
     mapY = YEG_SIZE/2 - DISPLAY_WIDTH/2;
