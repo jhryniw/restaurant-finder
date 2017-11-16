@@ -20,6 +20,8 @@
 
 #define NUM_TO_DISPLAY 30
 
+#define SCREEN_WIDTH 320
+
 // We don't need to test the alignment because
 // we added the packed attribute
 struct Restaurant {
@@ -37,7 +39,7 @@ struct RestDist {
 extern Sd2Card card;
 extern Adafruit_ILI9341 tft;
 extern int selection;
-extern int restaurantIndex[NUM_TO_DISPLAY];
+extern int restaurantIndex[NUM_RESTAURANTS];
 
 const int TEXT_SIZE = 1;
 
@@ -59,7 +61,7 @@ void getRestaurant(int restIndex, Restaurant* rest);
  * @param name String to display
  * @param index Index number of restaurant in displayed list
  */
-void writeName(const char* name, int index);
+void writeName(const char* name, uint8_t rating, int index);
 
 /**
  * Updates value of selection when cursor moves in list mode.
@@ -67,15 +69,7 @@ void writeName(const char* name, int index);
  * Also reprints last/currently selected restaurant names.
  * @param new_selection Value of next selection
  */
-void changeSelection(int new_selection);
-
-/**
- * Called once when switching from map to list mode.
- * Updates restaurantIndex[] and displays restaurants.
- * @param x Longitude of cursor on click.
- * @param y Latitude of cursor on click.
- */
-void goToListMode(int32_t x, int32_t y);
+void changeSelection(int new_selection, uint8_t sr);
 
 /**
  * Finds the closest 30 restaurants from cursor position
@@ -83,6 +77,14 @@ void goToListMode(int32_t x, int32_t y);
  * @param x Longitude of cursor
  * @param y Latitude of cursor
  */
-void getRestaurantList(int32_t x, int32_t y);
+void getRestaurantList(int32_t x, int32_t y, uint8_t sr);
+
+/**
+ * Called once when switching from map to list mode.
+ * Updates restaurantIndex[] and displays restaurants.
+ * @param x Longitude of cursor on click.
+ * @param y Latitude of cursor on click.
+ */
+void goToListMode(int32_t x, int32_t y, int8_t sr);
 
 #endif

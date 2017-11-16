@@ -38,7 +38,7 @@ void changeState() {
 
         // Reset the selection
         selection = 0;
-        goToListMode(cursor_lon, cursor_lat);
+        goToListMode(cursor_lon, cursor_lat, minRating);
     }
     // Going into map mode
     else {
@@ -116,11 +116,11 @@ int main() {
         else {
             // Move up the list
             if (joy_state.direction & UP_MASK) {
-                changeSelection(selection - 1);
+                changeSelection(selection - 1, minRating);
             }
             // Move down the list
             else if (joy_state.direction & DOWN_MASK) {
-                changeSelection(selection + 1);
+                changeSelection(selection + 1, minRating);
             }
             delay(100);
         }
