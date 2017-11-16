@@ -13,6 +13,7 @@
 #include "joy.h"
 #include "rest_sd.h"
 #include "restaurant_map.h"
+#include "touch_disp.h"
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);        // The display
 lcd_image_t yegImage = { "yeg-big.lcd" , YEG_SIZE, YEG_SIZE };  // The map image
@@ -20,6 +21,8 @@ RestaurantMap restaurantMap(&tft);                              // The map insta
 
 bool mapState;                                                  // Mode: True if showing map, false if in list mode
 int selection = 0;                                              // Selected item in the list
+
+int minRating = 1;
 
 /**
  * Transition from the map mode to the list mode and vice-versa
@@ -74,6 +77,8 @@ void setup() {
 
    // Initialize joystick
    initJoy();
+
+   initTouch(&tft);
 }
 
 int main() {
