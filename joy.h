@@ -29,7 +29,7 @@ struct joy_state_t {
     // The x and y positions of the joystick, from -512 to +512
     int x_pos;
     int y_pos;
-    // True means the button is pdisplayAllRests(rest, 30);ressed
+    // True means the button is pressed
     bool button_pressed;
     // A bitmask for the direction, only the last four bits are used
     uint8_t direction;
