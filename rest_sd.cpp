@@ -174,7 +174,7 @@ void getRestaurantList(int32_t x, int32_t y) {
 		distances_all[i].index = i;
 		distances_all[i].dist = abs(x-temp_rest.lon) + abs(y-temp_rest.lat);
 	}
-	ssort(distances_all, NUM_RESTAURANTS);
+	qsort(distances_all, NUM_RESTAURANTS);
 
   // Updates global restaurantIndex[] with
   // index values of closest 30 restaurants
