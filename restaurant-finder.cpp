@@ -99,12 +99,17 @@ int main() {
             restaurantMap.redrawCursor(joy_state);
             restaurantMap.moveMap();
 
-            TSPoint p = ts.getPoint();
-            Serial.print("x: ");
-            Serial.print(p.x);
-            Serial.print("y: ");
-            Serial.println(p.y);
-            setSelectedRating(&tft, minRating, p);
+            TSPoint touch = ts.getPoint();
+
+        	if (touch.z > MINPRESSURE || touch.z < MAXPRESSURE) {
+                int touchY = map(touch.x, TS_MINX, TS_MAXX, 0, TFT_HEIGHT - 1);
+            	int touchX = map(touch.y, TS_MINY, TS_MAXY, TFT_WIDTH - 1, 0);
+
+                if (touchX >= MAP_WIDTH) {
+            		// there is a touch on the ratings
+                    setSelectedRating(&tft, minRating, touchX, touchY);
+                }
+        	}
 
             delay(5);
         }

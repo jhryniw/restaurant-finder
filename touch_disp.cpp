@@ -24,23 +24,15 @@ void initTouch(Adafruit_ILI9341* tft) {
   }
 }
 
-void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, TSPoint p) {
+void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, int touchX, int touchY) {
 
-    bool ratingChanged = false;
+    bool ratingChanged = currRating != RATING_NUM - (touchY / (BUTTON_RADIUS * 2));
 
-    if (p.x >= MAP_WIDTH) {
-        ratingChanged = currRating != RATING_NUM - (p.y / (BUTTON_RADIUS * 2));
-        currRating = RATING_NUM - (p.y / (BUTTON_RADIUS * 2));
-        if (currRating < 1) {
-            currRating = 1;
-        }
+    currRating = RATING_NUM - (touchY / (BUTTON_RADIUS * 2));
+    if (currRating < 1) currRating = 1;
 
-        for (uint8_t rating = 1; rating <= RATING_NUM && ratingChanged; rating++) {
-
-            bool on = rating > currRating;
-            drawRating(tft, rating, on);
-
-        }
+    for (uint8_t rating = 1; rating <= RATING_NUM && ratingChanged; rating++) {
+        bool on = rating >= currRating;
+        drawRating(tft, rating, on);
     }
-
 }

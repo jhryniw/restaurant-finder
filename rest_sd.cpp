@@ -63,7 +63,7 @@ int pivot(RestDist* a, int n, int pi) {
 }
 
 // Sort an array of n RestDist elements using Quick Sort
-void qsort(RestDist *rest_dist, int len) {
+void qsort(RestDist* rest_dist, int len) {
     // if n <= 1 do nothing
     if (len <= 1) return;
 
@@ -77,7 +77,7 @@ void qsort(RestDist *rest_dist, int len) {
 
 // Selection sort
 // rest_dist is an array of RestDist, from rest_dist[0] to rest_dist[len-1]
-void ssort(RestDist *rest_dist, int len) {
+void ssort(RestDist* rest_dist, int len) {
   for (int i = len-1; i >= 1; --i) {
     // Find the index of furthest restaurant
     int max_idx = 0;
