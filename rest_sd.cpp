@@ -32,6 +32,49 @@ void swap_rest(RestDist *ptr_rest1, RestDist *ptr_rest2) {
   *ptr_rest2 = tmp;
 }
 
+// Perform the pivot procedure for quicksort
+int pivot(RestDist* a, int n, int pi) {
+    // Flip pivot to end
+    swap_rest(a + pi, a + n - 1);
+
+    int lo = 0;
+    int hi = n - 2;
+
+    while(hi >= lo) {
+        if(a[lo].dist <= a[n-1].dist) {
+            lo++;
+        }
+        else if(a[hi].dist > a[n-1].dist) {
+            hi--;
+        }
+        else {
+            swap_rest(a + lo, a + hi);
+            // We can increment/decrement
+            // both indexes after a swap
+            lo++; hi--;
+        }
+    }
+
+    // Flip pivot into its place
+    swap_rest(a + lo, a + n - 1);
+
+    // Return the new pivot
+    return lo;
+}
+
+// Sort an array of n RestDist elements using Quick Sort
+void qsort(RestDist *rest_dist, int len) {
+    // if n <= 1 do nothing
+    if (len <= 1) return;
+
+    // pivot at len / 2
+    int new_pi = pivot(rest_dist, len, len / 2);
+
+    // recursively call quicksort on each side of the new pivot
+    qsort(rest_dist, new_pi);
+    qsort(rest_dist + new_pi + 1, len - new_pi - 1);
+}
+
 // Selection sort
 // rest_dist is an array of RestDist, from rest_dist[0] to rest_dist[len-1]
 void ssort(RestDist *rest_dist, int len) {
