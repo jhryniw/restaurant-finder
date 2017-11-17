@@ -22,7 +22,10 @@ void RestaurantMap::init() {
         Serial.print("failed! Is it inserted properly?");
         while(true) {}
     }
-    
+    else {
+        Serial.println("OK!");
+    }
+
     // Map starts in the center of the map
     mapX = YEG_SIZE/2 - MAP_WIDTH/2;
     mapY = YEG_SIZE/2 - DISPLAY_WIDTH/2;

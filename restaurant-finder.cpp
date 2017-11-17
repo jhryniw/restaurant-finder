@@ -47,10 +47,12 @@ void changeState() {
         Restaurant temp_rest;
 
         // Set the cursor position based on selected restaurant
-        getRestaurant(restaurantIndex[selection], & temp_rest);
+        getRestaurant(restaurantIndex[topDispRestIndex+selection], &temp_rest);
         int32_t rest_lon = temp_rest.lon;
         int32_t rest_lat = temp_rest.lat;
         restaurantMap.setPosition(rest_lon, rest_lat);
+
+        initTouch(&tft);
     }
 }
 
@@ -116,11 +118,11 @@ int main() {
         else {
             // Move up the list
             if (joy_state.direction & UP_MASK) {
-                changeSelection(selection - 1, minRating);
+                changeSelection(selection - 1);
             }
             // Move down the list
             else if (joy_state.direction & DOWN_MASK) {
-                changeSelection(selection + 1, minRating);
+                changeSelection(selection + 1);
             }
             delay(100);
         }
