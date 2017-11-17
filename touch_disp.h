@@ -38,7 +38,7 @@
 
 extern TouchScreen ts;
 
-void initTouch(Adafruit_ILI9341* tft);
+void drawAllRatings(Adafruit_ILI9341* tft, uint8_t currRating);
 void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, int touchX, int touchY);
 
 #endif

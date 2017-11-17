@@ -17,7 +17,6 @@
 
 #define REST_START_BLOCK 4000000
 #define NUM_RESTAURANTS  1066
-#define MAX_REST_IN_LIST (NUM_RESTAURANTS/2)
 
 #define NUM_TO_DISPLAY 30
 
@@ -40,7 +39,7 @@ struct RestDist {
 extern Sd2Card card;
 extern Adafruit_ILI9341 tft;
 extern int selection;
-extern int restaurantIndex[MAX_REST_IN_LIST];
+extern int* restaurantIndex;
 extern int topDispRestIndex;
 
 const int TEXT_SIZE = 1;

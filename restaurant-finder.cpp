@@ -45,14 +45,17 @@ void changeState() {
         tft.fillScreen(0);
         // Get selected restaurant
         Restaurant temp_rest;
+        getRestaurant(restaurantIndex[topDispRestIndex+selection], &temp_rest);
 
         // Set the cursor position based on selected restaurant
-        getRestaurant(restaurantIndex[topDispRestIndex+selection], &temp_rest);
+        delete[] restaurantIndex;
+
+
         int32_t rest_lon = temp_rest.lon;
         int32_t rest_lat = temp_rest.lat;
         restaurantMap.setPosition(rest_lon, rest_lat);
 
-        initTouch(&tft);
+        drawAllRatings(&tft, minRating);
     }
 }
 
@@ -80,7 +83,7 @@ void setup() {
    // Initialize joystick
    initJoy();
 
-   initTouch(&tft);
+   drawAllRatings(&tft, minRating);
 }
 
 int main() {
@@ -124,7 +127,7 @@ int main() {
             else if (joy_state.direction & DOWN_MASK) {
                 changeSelection(selection + 1);
             }
-            delay(100);
+            delay(5);
         }
     }
 

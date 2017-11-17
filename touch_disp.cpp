@@ -18,9 +18,10 @@ void drawRating(Adafruit_ILI9341* tft, uint8_t rating, bool on) {
     tft->drawChar(charX, charY, (char)(rating + 48), textColor, fillColor, RATING_SIZE);
 }
 
-void initTouch(Adafruit_ILI9341* tft) {
+void drawAllRatings(Adafruit_ILI9341* tft, uint8_t currRating) {
   for (uint8_t rating = 1; rating <= RATING_NUM; rating++) {
-    drawRating(tft, rating, true);
+      bool on = rating >= currRating;
+      drawRating(tft, rating, on);
   }
 }
 
@@ -31,8 +32,7 @@ void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, int touchX, i
     currRating = RATING_NUM - (touchY / (BUTTON_RADIUS * 2));
     if (currRating < 1) currRating = 1;
 
-    for (uint8_t rating = 1; rating <= RATING_NUM && ratingChanged; rating++) {
-        bool on = rating >= currRating;
-        drawRating(tft, rating, on);
+    if (ratingChanged) {
+      drawAllRatings(tft, currRating);
     }
 }

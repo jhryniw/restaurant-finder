@@ -7,7 +7,7 @@
 #include "rest_sd.h"
 
 Sd2Card card;
-int restaurantIndex[MAX_REST_IN_LIST];
+int* restaurantIndex = new int[NUM_RESTAURANTS];
 int topDispRestIndex = 0;
 int maxRestIndex = 0;
 
@@ -181,7 +181,7 @@ void writeName(const char* name, uint8_t rating, int index) {
    // Enters restaurant index and Manhattan distance
    // for each restaurant then sorts it by closest distance.
  	for (int i = 0; i < NUM_RESTAURANTS &&
-            lastIndex < MAX_REST_IN_LIST; i++) {
+            lastIndex < NUM_RESTAURANTS; i++) {
  		Restaurant temp_rest;
  		getRestaurant(i, &temp_rest);
 
