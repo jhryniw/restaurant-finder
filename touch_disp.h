@@ -26,6 +26,7 @@
 #define TFT_WIDTH  320
 #define TFT_HEIGHT 240
 
+// Useful constant for manipulating the rating display
 #define MAP_WIDTH       (TFT_WIDTH - 48)
 #define BUTTON_RADIUS   24
 #define BUTTON_DIAMETER (BUTTON_RADIUS * 2)
@@ -36,9 +37,24 @@
 #define RATING_WIDTH    (RATING_SIZE * 5)
 #define RATING_HEIGHT   (RATING_SIZE * 7)
 
+// The touchscreen
 extern TouchScreen ts;
 
+/**
+ * Draws all ratings to the screen based on the selected minimum rating
+ * Ratings are "on" if they are more or equal to the minimum rating
+ * @param tft pointer for the display
+ * @param currRating the current minimum rating
+ */
 void drawAllRatings(Adafruit_ILI9341* tft, uint8_t currRating);
+
+/**
+ * Sets the minimum rating based on the location of a touch on the touchscreen
+ * @param tft pointer for the display
+ * @param currRating the minimum rating (returned)
+ * @param touchX the x coordinate of the touch
+ * @param touchY the y coordinate of the touch
+ */
 void setSelectedRating(Adafruit_ILI9341* tft, uint8_t& currRating, int touchX, int touchY);
 
 #endif

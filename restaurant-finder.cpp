@@ -50,7 +50,6 @@ void changeState() {
         // Set the cursor position based on selected restaurant
         delete[] restaurantIndex;
 
-
         int32_t rest_lon = temp_rest.lon;
         int32_t rest_lat = temp_rest.lat;
         restaurantMap.setPosition(rest_lon, rest_lat);

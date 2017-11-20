@@ -17,6 +17,9 @@ RestaurantMap::RestaurantMap(Adafruit_ILI9341* tft) :
 /** Initializing restaurant map */
 void RestaurantMap::init() {
 
+    // We assume this has been called
+    // tft.begin();
+    
     Serial.print("Initializing SD card...");
     if (!SD.begin(SD_CS)) {
         Serial.print("failed! Is it inserted properly?");
