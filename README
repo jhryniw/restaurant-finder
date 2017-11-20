@@ -26,6 +26,8 @@ Wiring instructions:
     * X-    <>  A3
     * CCS   <>  6
 
+  Note: Make sure the SD card is properly inserted in the Adafruit display
+
   Joystick:
     (Left is joystick, right is Arduino)
     * GND   <>  GND
@@ -46,6 +48,10 @@ Program instructions:
 		from the cursor.
 	* Selecting a restaurant in list mode then clicking the cursor will center
 		the cursor and map on the selection.
+  * Touching the ratings bar on the right hand of the screen will allow you to
+    select the minimum rating of the restaurants displayed when you select a
+    location. Restaurants are rated from 1-5 with 5 being the highest
+     * The lowest rating circle filled in white indicates the minimum rating.
 
 Notes:
   * The program assumes that the joysticks are calibrated similarly.
